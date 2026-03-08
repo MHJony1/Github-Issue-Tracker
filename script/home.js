@@ -86,6 +86,7 @@ function displayIssueCards(cards) {
   cards.forEach((card) => {
     // console.log(card);
     const issueCard = document.createElement("div");
+    issueCard.setAttribute("onclick", `showCardModal(${card.id})`);
     issueCard.className = `bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col h-full hover:shadow-md transition-shadow`;
 
      // Accent bar color (Open vs Closed)
@@ -147,6 +148,50 @@ function searchIssueCard() {
   const searchValue = document.getElementById("input-search").value.toLowerCase();
   const filteredIssues = allIssues.filter(issue => issue.title.trim().toLowerCase().includes(searchValue) || issue.description.trim().toLowerCase().includes(searchValue));
   displayIssueCards(filteredIssues);
+}
+
+//show modal card
+function showCardModal (issueId){
+  const issue = allIssues.find(issue => issue.id === issueId);
+  if(!issue){
+    return;
+  }
+  const modalContentArea = document.getElementById("modal-content-area");
+  modalContentArea.innerHTML = `
+
+      <h2 class="text-2xl font-bold text-slate-800 mb-3">${issue.title}</h2>
+
+     <div class="flex items-center gap-2 mb-6">
+       <span class="bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1.5">
+         Opened
+       </span>
+       <span class="text-slate-400 text-sm">
+        <span class="w-2 h-1 font-bold text-black mx-1"> •  </span> Opened by <span class="text-slate-500 font-medium">${issue.author}</span> <span class="w-2 h-1 font-bold text-black mx-1"> • </span> ${new Date(issue.createdAt).toLocaleDateString()}
+       </span>
+     </div>
+
+     <div class="flex gap-3 mb-6">
+       ${issue.labels.map(label => `<span class="bg-orange-100 px-3 py-1 rounded-full text-[12px] text-orange-600 font-bold uppercase">${label}</span>`).join('')}
+     </div>
+
+     <p class="text-slate-500 leading-normal  mb-6 text-[16px]">
+      ${issue.description}
+     </p>
+
+     <div class="bg-base-200 rounded-xl p-5 grid grid-cols-3 items-center mb-4">
+       <div>
+         <p class="text-slate-400 text-md mb-o.5">Assignee:</p>
+         <p class="text-slate-700 font-bold text-lg leading-tight">${issue.assignee || "Unassigned"}</p>
+       </div>
+       <div class="flex flex-col items-center">
+         <p class="text-slate-400 text-md mb-0.5">Priority:</p>
+         <span class="bg-red-500 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wider">${issue.priority.toUpperCase()}</span>
+       </div>
+     </div>
+
+  `;
+   document.getElementById("issue_details_modal").showModal();;
+  
 }
 
 

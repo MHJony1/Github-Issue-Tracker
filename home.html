@@ -23,24 +23,24 @@
   <header>
     <!-- navbar design -->
      <div class="navbar flex justify-between items-center bg-base-100 shadow-sm">
-  <div class="flex items-center gap-2">
-    <div tabindex="0" role="button" class="btn-ghost btn-circle avatar">
-        <div class="w-10 rounded-full">
-          <img
-            alt="Tailwind CSS Navbar component"
-            src="./assets/github-logo.png" />
+        <div class="flex items-center gap-2">
+          <div tabindex="0" role="button" class="btn-ghost btn-circle avatar">
+              <div class="w-10 rounded-full">
+                <img
+                  alt="Tailwind CSS Navbar component"
+                  src="./assets/github-logo.png" />
+              </div>
+            </div>
+          <p class=" text-xl md:text-2xl font-semibold">Github Issue Tracker</p>
+        </div>
+        <div class="flex gap-2">
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input id="input-search" type="text"  placeholder="Search Issues..." class="input input-bordered w-24 bg-gray-100 md:w-auto search-box"/>
+          </div>
+          <button onclick="searchIssueCard()" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
         </div>
       </div>
-    <p class=" text-xl md:text-2xl font-semibold">Github Issue Tracker</p>
-  </div>
-  <div class="flex gap-2">
-    <div class="relative">
-      <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-      <input id="input-search" type="text"  placeholder="Search Issues..." class="input input-bordered w-24 bg-gray-100 md:w-auto search-box"/>
-    </div>
-    <button onclick="searchIssueCard()" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
-  </div>
-</div>
   </header>
 
   <main class="w-10/12 mx-auto mt-8">
@@ -76,10 +76,10 @@
 
      </div>
 
-           <!-- loading spinner -->
-             <div id="loadingSpinner" class="h-[60vh] flex hidden justify-center items-center">
-              <span class="loading loading-spinner loading-xl"></span>
-             </div>
+    <!-- loading spinner -->
+      <div id="loadingSpinner" class="h-[60vh] flex hidden justify-center items-center">
+       <span class="loading loading-spinner loading-xl"></span>
+      </div>
          
 
      <!-- load issue card section -->
@@ -87,18 +87,29 @@
         <div id="cardContainer" class="grid grid-cols-1 sm:grid-cols-4 gap-4 ">
           <!-- Dynamic cards will be added here -->
 
-          <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow">
-  
-              <!-- <div class="h-1 bg-emerald-500 w-full"></div> -->
+          <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow">     
+         
+          </div>
 
-              
-              </div>
-        </div>
-
-            
+        </div>     
       </div>
 
-              
+        <!-- show modal card -->
+        <dialog id="issue_details_modal" class="modal">
+          <div class="modal-box max-w-2xl p-5 overflow-hidden  bg-white rounded-2xl">
+            <div id="modal-content-area"></div>
+            
+            <div class="modal-action p-4">
+              <form method="dialog">
+                <button class="btn btn-primary ">Close</button>
+              </form>
+            </div>
+          </div>
+          <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+          </form>
+        </dialog>
+
 
   </main>
 
