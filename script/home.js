@@ -100,6 +100,16 @@ function displayIssueCards(cards) {
       };
       const prStyles = priorityStyles[card.priority.toLowerCase()] || "bg-red-50 text-red-500"; 
 
+       // labels styling set
+      const labelStyles = {
+         bug: { bg: "bg-red-50", text: "text-red-500", border: "border-red-100", icon: "🐞" },
+         enhancement: { bg: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-100", icon: "✨" },
+         "help wanted": { bg: "bg-amber-50", text: "text-amber-600", border: "border-amber-100", icon: "⚙️" },
+         documentation: { bg: "bg-blue-50", text: "text-blue-600", border: "border-blue-100", icon: "📝" },
+         default: { bg: "bg-gray-100", text: "text-gray-600", border: "border-gray-100", icon: "🏷️" }
+        };
+        
+
       // Assignee faka thakle 'Unassigned' dekhabe
        const assigneeName = card.assignee || "Unassigned";
 
@@ -119,23 +129,35 @@ function displayIssueCards(cards) {
                  <h3 class="text-gray-800 font-bold text-[16px] leading-tight mb-2">${card.title}</h3>
                  <p class="text-gray-500 text-s[12px] leading-normal line-clamp-2 mb-4 grow">${card.description}</p>
                
-                 <div class="flex flex-wrap gap-2 mb-4">
-                 ${card.labels.map(label => `<span class="bg-orange-100 px-2 py-0.5 rounded-full text-[10px] text-orange-600 font-bold uppercase">${label}</span>`).join('')}
-                 </div>
-
-                  <div class=" border-t-2 border-gray-200 pt-3 mt-auto">
-                   <div class="text-[12px] text-gray-400 flex justify-between items-center w-full mb-2">
-                     <p class="text-sm">#${card.id} <span class="font-medium text-gray-600">${card.author}</span></p>
-                     <p class="text-right">${new Date(card.createdAt).toLocaleDateString()}</p>
-                   </div>
-                   <div class="text-[12px] text-gray-400 flex justify-between items-center w-full">
-                     <p><span class="font-medium text-gray-500">Assignee:</span> ${assigneeName}</p>
-                     <p class="text-right">update: ${new Date(card.updatedAt).toLocaleDateString()}</p>
-                   </div>
-
-                 </div>
                  
+              <div class="flex flex-wrap gap-1 mb-4">
+                 ${card.labels.map(label => {
+             
+                const style = labelStyles[label.toLowerCase()] || labelStyles.default;
+
+                return `
+               <span class="${style.bg} ${style.text} ${style.border} border px-2 py-0.5 rounded-full text-[10px] font-bold uppercase flex items-center gap-1 transition-all hover:opacity-80 cursor-default">
+                 <span class="text-[14px]">${style.icon}</span> 
+                 ${label}
+               </span>
+             `;
+           }).join('')}
+          </div>
+     
+                
+
+              <div class=" border-t-2 border-gray-200 pt-3 mt-auto">
+               <div class="text-[12px] text-gray-400 flex justify-between items-center w-full mb-2">
+                 <p class="text-sm">#${card.id} <span class="font-medium text-gray-600">${card.author}</span></p>
+                 <p class="text-right">${new Date(card.createdAt).toLocaleDateString()}</p>
                </div>
+               <div class="text-[12px] text-gray-400 flex justify-between items-center w-full">
+                 <p><span class="font-medium text-gray-500">Assignee:</span> ${assigneeName}</p>
+                 <p class="text-right">update: ${new Date(card.updatedAt).toLocaleDateString()}</p>
+               </div
+             </div>
+             
+         </div>
     `;
 
     cardContainer.appendChild(issueCard);
@@ -146,7 +168,8 @@ loadIssueCards();
 // search Issue card 
 function searchIssueCard() {
   const searchValue = document.getElementById("input-search").value.toLowerCase();
-  const filteredIssues = allIssues.filter(issue => issue.title.trim().toLowerCase().includes(searchValue) || issue.description.trim().toLowerCase().includes(searchValue));
+  const filteredIssues = allIssues.filter(issue => issue.title.trim().toLowerCase().includes(searchValue));
+  // || issue.description.trim().toLowerCase().includes(searchValue)
   displayIssueCards(filteredIssues);
 }
 
@@ -156,36 +179,62 @@ function showCardModal (issueId){
   if(!issue){
     return;
   }
+   // Priority Style set
+      const priorityStyles = {
+        high: "bg-red-600 text-white ",
+        medium: "bg-yellow-500 text-white ",
+        low: "bg-gray-500 text-white"
+      };
+      const prStyles = priorityStyles[issue.priority.toLowerCase()] || "bg-red-50 text-red-500"; 
+
+          const labelStyles = {
+       bug: 'bg-red-100 text-red-600',
+      enhancement: 'bg-emerald-100 text-emerald-600',
+      'help wanted': 'bg-amber-100 text-amber-600',
+      documentation: 'bg-blue-100 text-blue-600',
+      default: 'bg-gray-100 text-gray-600'
+      };
+           
+
   const modalContentArea = document.getElementById("modal-content-area");
   modalContentArea.innerHTML = `
 
       <h2 class="text-2xl font-bold text-slate-800 mb-3">${issue.title}</h2>
 
-     <div class="flex items-center gap-2 mb-6">
-       <span class="bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1.5">
-         Opened
-       </span>
+     <div class="flex items-center gap-2 mb-5">
+      <span class="${issue.status === 'open' ? 'bg-emerald-600' : 'bg-purple-700'} text-white px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1.5">
+          ${issue.status === 'open' ? 'Opened' : 'Closed'}
+        </span>
+       
        <span class="text-slate-400 text-sm">
         <span class="w-2 h-1 font-bold text-black mx-1"> •  </span> Opened by <span class="text-slate-500 font-medium">${issue.author}</span> <span class="w-2 h-1 font-bold text-black mx-1"> • </span> ${new Date(issue.createdAt).toLocaleDateString()}
        </span>
      </div>
+       
+          <div class="flex flex-wrap gap-3 mb-5">
+             ${issue.labels.map(label => { 
+         const currentStyle = labelStyles[label.toLowerCase()] || labelStyles.default;
+         return `
+           <span class="${currentStyle} px-3 py-1 rounded-full text-[12px] font-bold uppercase">
+             ${label}
+           </span>
+         `;
+       }).join('')}
+      </div>
+   
 
-     <div class="flex gap-3 mb-6">
-       ${issue.labels.map(label => `<span class="bg-orange-100 px-3 py-1 rounded-full text-[12px] text-orange-600 font-bold uppercase">${label}</span>`).join('')}
-     </div>
-
-     <p class="text-slate-500 leading-normal  mb-6 text-[16px]">
+     <p class="text-slate-500 leading-normal  mb-5 text-[16px]">
       ${issue.description}
      </p>
 
-     <div class="bg-base-200 rounded-xl p-5 grid grid-cols-3 items-center mb-4">
+     <div class="bg-base-200  rounded-xl p-5 flex justify-between items-center mb-2">
        <div>
          <p class="text-slate-400 text-md mb-o.5">Assignee:</p>
          <p class="text-slate-700 font-bold text-lg leading-tight">${issue.assignee || "Unassigned"}</p>
        </div>
        <div class="flex flex-col items-center">
          <p class="text-slate-400 text-md mb-0.5">Priority:</p>
-         <span class="bg-red-500 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wider">${issue.priority.toUpperCase()}</span>
+         <span class="${prStyles} px-4 py-1 rounded-full text-xs font-bold tracking-wider">${issue.priority.toUpperCase()}</span>
        </div>
      </div>
 
@@ -194,6 +243,3 @@ function showCardModal (issueId){
   
 }
 
-
-
-  
